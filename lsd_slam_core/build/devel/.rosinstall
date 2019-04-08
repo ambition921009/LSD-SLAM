@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/ambition/rosbuild_ws/package_dir/lsd_slam/lsd_slam_core/build/devel/setup.sh

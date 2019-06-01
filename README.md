@@ -84,7 +84,7 @@ Play the sequence:
 
 
 
-## 2.3 ROS Kinect + Ubuntu 16.04 
+## 2.3 ROS Kinectic + Ubuntu 16.04 
 这一部分是源代码说明中没有的，本人通过测试讲代码改为适合ROS Kinect + Ubuntu 16.04 环境下运行的版本。
 
 

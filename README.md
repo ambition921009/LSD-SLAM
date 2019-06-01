@@ -1,13 +1,9 @@
-# LSD-SLAM: Large-Scale Direct Monocular SLAM
+# LSD-SLAM: 大尺度直接法单目SLAM
 
-LSD-SLAM is a novel approach to real-time monocular SLAM. It is fully direct (i.e. does not use keypoints / features) and creates large-scale, 
-semi-dense maps in real-time on a laptop. For more information see
-[http://vision.in.tum.de/lsdslam](http://vision.in.tum.de/lsdslam)
-where you can also find the corresponding publications and Youtube videos, as well as some 
-example-input datasets, and the generated output as rosbag or .ply point cloud.
+LSD-SLAM是一个新的单目实时SLAM方法。它是全部采用直接法（不使用关键点/特征）并在电脑上实时创建大规模、半稠密地图。更多信息请见(http://vision.in.tum.de/lsdslam)，在那里你可以找到相应的出版物和Youtube视频，以及一些示例输入数据集和生成rosbag或.ply点云的输出项。
 
 
-### Related Papers
+### 相关论文
 
 * **LSD-SLAM: Large-Scale Direct Monocular SLAM**, *J. Engel, T. Schöps, D. Cremers*, ECCV '14
 
@@ -17,9 +13,9 @@ example-input datasets, and the generated output as rosbag or .ply point cloud.
 
 # 1. Quickstart / Minimal Setup
 
-First, install LSD-SLAM following 2.1 or 2.2, depending on your Ubuntu / ROS version. You don't need openFabMap for now.
+首先, 安装LSD-SLAM 2.1 或 2.2 的版本，这取决于你的ubuntu/ROS版本。你现在不需要openFabMap。
 
-Download the [Room Example Sequence](http://vmcremers8.informatik.tu-muenchen.de/lsd/LSD_room.bag.zip) and extract it.
+下载 [Room Example Sequence](http://vmcremers8.informatik.tu-muenchen.de/lsd/LSD_room.bag.zip) 并解压。
 
 
 Launch the lsd_slam viewer:
@@ -36,97 +32,111 @@ Play the sequence:
 
 
 
-You should see one window showing the current keyframe with color-coded depth (from live_slam), 
-and one window showing the 3D map (from viewer). If for some reason the initialization fails 
-(i.e., after ~5s the depth map still looks wrong), focus the depth map and hit 'r' to re-initialize.
+你应该会看到一个显示颜色编码深度（来自live_slam）的当前关键帧窗口，以及显示3D地图（来自viewer）的窗口。如果由于某种原因初始化失败（即5s后深度图仍然显示错误），则查看深度图并点击“r”来重新初始化。
 
 
 
-# 2. Installation
-We tested LSD-SLAM on two different system configurations, using Ubuntu 12.04 (Precise) and ROS fuerte, or Ubuntu 14.04 (trusty) and ROS indigo. Note that building without ROS is not supported, however ROS is only used for input and output, facilitating easy portability to other platforms.
+# 2. 安装
+我们在不同的系统配置下测试LSD-SLAM,包括Ubuntu 12.04(Precise) + ROS fuerte、Ubuntu 14.04 (trusty) and ROS indigo、Ubuntu 16.04（）+ROS kinetic。请注意，不支持不带ROS的构建，但ROS仅用于输入和输出，便于移植到其他平台。
 
 
-## 2.1 ROS kinetic + Ubuntu 16.04
-**We do not use catkin, however unfortunately old-fashioned CMake-builds are not possible with ROS kinetic.**
-For this you need to create a rosbuild workspace (if you don't have one yet), using:
+## 2.1 ROS fuerte + Ubuntu 12.04
+安装系统依赖项:
 
-    sudo apt-get install python-rosinstall
-    mkdir ~/rosbuild_ws
-    cd ~/rosbuild_ws
-    rosws init . /opt/ros/kinetic
-    mkdir package_dir
-    rosws set ~/rosbuild_ws/package_dir -t .
-    echo "source ~/rosbuild_ws/setup.bash" >> ~/.bashrc
-    bash
-    cd package_dir
+    sudo apt-get install ros-fuerte-libg2o liblapack-dev libblas-dev freeglut3-dev libqglviewer-qt4-dev libsuitesparse-dev libx11-dev
 
-Install system dependencies:
+在你的ROS包路径下, 克隆以下仓库:
 
-    sudo apt-get install ros-kinetic-libg2o ros-kinetic-cv-bridge liblapack-dev libblas-dev freeglut3-dev libqglviewer-dev libsuitesparse-dev libx11-dev
+    git clone https://github.com/tum-vision/lsd_slam.git lsd_slam
 
-In your ROS package path, clone the repository:
-
-    git clone https://github.com/ambition921009/LSD-SLAM.git lsd_slam
-
-Compile the two package by typing:
+通过输入以下内容编译两个包:
 
     rosmake lsd_slam
 
 
 
 
+## 2.2 ROS indigo + Ubuntu 14.04
+**我们不使用catkin, 然而幸运的是，传统的CMAKE构建仍然可以与ROS Indigo一起使用。**
+对此，你需要创建一个 rosbuild 工作空间(如果你还没有), 使用以下命令:
+
+    sudo apt-get install python-rosinstall
+    mkdir ~/rosbuild_ws
+    cd ~/rosbuild_ws
+    rosws init . /opt/ros/indigo
+    mkdir package_dir
+    rosws set ~/rosbuild_ws/package_dir -t .
+    echo "source ~/rosbuild_ws/setup.bash" >> ~/.bashrc
+    bash
+    cd package_dir
+
+安装系统依赖项:
+
+    sudo apt-get install ros-indigo-libg2o ros-indigo-cv-bridge liblapack-dev libblas-dev freeglut3-dev libqglviewer-dev libsuitesparse-dev libx11-dev
+
+在你的ROS包路径下, 克隆以下仓库:
+
+    git clone https://github.com/tum-vision/lsd_slam.git lsd_slam
+
+通过输入以下内容编译两个包:
+
+    rosmake lsd_slam
 
 
-## 2.2 openFabMap for large loop-closure detection [optional]
-If you want to use openFABMAP for large loop closure detection, uncomment the following lines in `lsd_slam_core/CMakeLists.txt` :
+
+## 2.3 ROS Kinect + Ubuntu 16.04 
+这一部分是源代码说明中没有的，本人通过测试讲代码改为适合ROS Kinect + Ubuntu 16.04 环境下运行的版本。
+
+
+## 2.4 用于大规模回环检测的 openFabMap [可选]
+如果你想使用 openFABMAP 进行大规模回环检测, 取消 `lsd_slam_core/CMakeLists.txt` 文件中的下列注释:
 
     #add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap)
     #include_directories(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap/include)
     #add_definitions("-DHAVE_FABMAP")
     #set(FABMAP_LIB openFABMAP )
 
-**Note for Ubuntu 14.04:** The packaged OpenCV for Ubuntu 14.04 does not include the nonfree module, which is required for openFabMap (which requires SURF features).
-You need to get a full version of OpenCV with nonfree module, which is easiest by compiling your own version. 
-We suggest to use the [2.4.8](https://github.com/Itseez/opencv/releases/tag/2.4.8) version, to assure compatibility with the current indigo open-cv package.
+**Note for Ubuntu 14.04:** Ubuntu 14.04打包的 OpenCV不包含 openFabMap（它需要SURF特征点）所需的非自由模块。
+你需要获取包含非自由模块的全部版本的OpenCV，最简单的方法是编译自己的版本。 我们建议使用 [2.4.8]版本(https://github.com/Itseez/opencv/releases/tag/2.4.8), 以确保和当前的indigo版本保持兼容。
 
 
 
 
 
-# 3 Usage
-LSD-SLAM is split into two ROS packages, `lsd_slam_core` and `lsd_slam_viewer`. `lsd_slam_core` contains the full SLAM system, whereas `lsd_slam_viewer` is optionally used for 3D visualization.
-Please also read **General Notes for good results** below.
+# 3 使用
+LSD-SLAM 分为两个ROS包, `lsd_slam_core` 和 `lsd_slam_viewer`. `lsd_slam_core` 包含全部的SLAM系统, 反之， `lsd_slam_viewer` 是可选的，用于3D可视化.
+也请阅读下文的 **General Notes for good results** 。
 
 ## 3.1 `lsd_slam_core`
-We provide two different usage modes, one meant for live-operation (`live_slam`) using ROS input/output, and one `dataset_slam` to use on datasets in the form of image files.
+我们提供了两种不同的使用方式, 一种是使用ROS输入/输出的实时操作(`live_slam`), 一种是使用图像文件的数据集`dataset_slam`。
 
-### 3.1.1 Using `live_slam`
-If you want to directly use a camera.
+### 3.1.1 使用 `live_slam`
+如果你想直接使用摄像头。
 
     rosrun lsd_slam_core live_slam /image:=<yourstreamtopic> /camera_info:=<yourcamera_infotopic>
 
-When using ROS camera_info, only the image dimensions and the `K` matrix from the camera info messages will be used - hence the video has to be rectified.
+使用ROS摄像机信息时，仅使用摄像机中的图像尺寸和`K`矩阵信息，因此必须校正视频畸变。
 
-Alternatively, you can specify a calibration file using 
+或者，可以使用指定校准文件。
 
     rosrun lsd_slam_core live_slam /image:=<yourstreamtopic> _calib:=<calibration_file>
 
-In this case, the camera_info topic is ignored, and images may also be radially distorted. See the Camera Calibration section for details on the calibration file format.
+在这种情况下，摄像机信息主题容易被忽略，图像可能也会有徑向畸变。有关校正文件格式的详细信息，请参阅“相机校准”部分。
 
 
-### 3.1.2  Using `dataset_slam`
+### 3.1.2  使用 `dataset_slam`
 
     rosrun lsd_slam_core dataset_slam _files:=<files> _hz:=<hz> _calib:=<calibration_file>
 
-Here, `<files>` can either be a folder containing image files (which will be sorted alphabetically), or a text file containing one image file per line. `<hz>` is the framerate at which the images are processed, and `<calibration_file>` the camera calibration file. 
+这里, `<files>`可以是包含图像文件（按字母顺序存储）的文件夹，也可以是每行包含一个图像文件的文本文件。`<hz>`是处理图像的帧速率，以及`<calibration_file>`是相机校准文件。 
 
-Specify `_hz:=0` to enable sequential tracking and mapping, i.e. make sure that every frame is mapped properly. Note that while this typically will give best results, it can be much slower than real-time operation.
+指定`_hz:=0`以启用顺序跟踪和映射，即确保每帧都正确映射。注意，虽然这通常会产生最佳结果，但它可能比实时操作慢得多。
 
 
-### 3.1.3 Camera Calibration
-LSD-SLAM operates on a pinhole camera model, however we give the option to undistort images before they are being used. You can find some sample calib files in `lsd_slam_core/calib`.
+### 3.1.3 相机校准
+LSD-SLAM在针孔相机模型上工作，但是我们提供了在使用之前使图像不失真的选项。你可以在`lsd_slam_core/calib`中找到一些示例校准文件。
 
-#### Calibration File for FOV camera model:
+#### FOV相机模型的校准文件:
 
     fx/width fy/height cx/width cy/height d
     in_width in_height
@@ -134,11 +144,11 @@ LSD-SLAM operates on a pinhole camera model, however we give the option to undis
     out_width out_height
 
 
-Here, the values in the first line are the camera intrinsics and radial distortion parameter as given by the PTAM cameracalibrator, in\_width and in\_height is the input image size, and out\_width out\_height is the desired undistorted image size. The latter can be chosen freely, however 640x480 is recommended as explained in section 3.1.6. The third line specifies how the image is distorted, either by specifying a desired camera matrix in the same format as the first four intrinsic parameters, or by specifying "crop", which crops the image to maximal size while including only valid image pixels.
+这里，第一行中的值是相机的内部参数和径向畸变参数，这些参数是通过PTAM相机校准器获得的, in\_width 和 in\_height是输入图像的尺寸, out\_width out\_height 是所需的未失真图像的尺寸。后者可以自由选择，但建议使用640x480，如第3.1.6节所述。第三行指定图像的扭曲形式，或指定与前四项内部参数相同格式的所需的相机矩阵, 或通过指定"crop"将图像裁剪到仅包含有效像素的最大区域。
 
 
-#### Calibration File for Pre-Rectified Images
-This one is without radial distortion correction, as a special case of ATAN camera model but without the computational cost:
+#### 预校正图像的校准文件:
+这是一个没有径向畸变校正，作为一个特例的ATAN相机模型，但没有计算成本:
 
     fx/width fy/height cx/width cy/height 0
     width height
@@ -146,7 +156,7 @@ This one is without radial distortion correction, as a special case of ATAN came
     width height
 
 
-#### Calibration File for OpenCV camera model:
+#### OpenCV相机模型的校准文件:
 
     fx fy cx cy k1 k2 p1 p2
     inputWidth inputHeight
@@ -154,7 +164,7 @@ This one is without radial distortion correction, as a special case of ATAN came
     outputWidth outputHeight
 
 
-### 3.1.4 Useful Hotkeys
+### 3.1.4 可用的热键
 
 - `r`: Do a full reset
 
@@ -170,7 +180,7 @@ This one is without radial distortion correction, as a special case of ATAN came
 
 
 
-### 3.1.5 Parameters (Dynamic Reconfigure)
+### 3.1.5 参数 (Dynamic Reconfigure)
 A number of things can be changed dynamically, using (for ROS fuerte)
 
     rosrun dynamic_reconfigure reconfigure_gui 
@@ -212,7 +222,7 @@ Useful for debug output are:
 
 
 
-### 3.1.6 General Notes for Good Results
+### 3.1.6 好结果的一般说明
 
 * Use a **global shutter** camera. Using a rolling shutter will lead to inferior results.
 * Use a lens with a **wide field-of-view** (we use a 130° fisheye lens).
@@ -226,26 +236,25 @@ Useful for debug output are:
 
 
 ## 3.2 LSD-SLAM Viewer
-The viewer is only for visualization. It can also be used to output a generated point cloud as .ply.
-For live operation, start it using
+The viewer仅用于可视化. 它也可以输出.ply格式的点云。
+实时操作, 开始使用:
 
     rosrun lsd_slam_viewer viewer
 
-You can use rosbag to record and re-play the output generated by certain trajectories. Record & playback using
+您可以使用Rosbag记录和重新播放某些轨迹生成的输出。录制和播放使用
 
     rosbag record /lsd_slam/graph /lsd_slam/keyframes /lsd_slam/liveframes -o file_pc.bag
     rosbag play file_pc.bag
 
-You should never have to restart the viewer node, it resets the graph automatically.
+您不必重新启动查看器节点，它会自动重置图形。
 
-If you just want to lead a certain pointcloud from a .bag file into the viewer, you 
-can directly do that using 
+如果只想将某个点云从.bag文件引导到查看器中，可以使用
 
     rosrun lsd_slam_viewer viewer file_pc.bag
 
 
 
-### 3.2.1 Useful Hotkeys
+### 3.2.1 可用的热键
 
 - `r`: Reset, will clear all displayed data.
 
@@ -254,7 +263,7 @@ can directly do that using
 - `p`: Write currently displayed points as point cloud to file lsd_slam_viewer/pc.ply, which can be opened e.g. in meshlab. Use in combination with sparsityFactor to reduce the number of points.
 
 
-### 3.2.2 Parameters (Dynamic Reconfigure)
+### 3.2.2 参数 (Dynamic Reconfigure)
 
 - `showKFCameras `: Toggle drawing of blue keyframe camera-frustrums. min: False, default: True, max: True
 - `showKFPointclouds `: Toggle drawing of point clouds for all keyframes. min: False, default: True, max: True
@@ -276,20 +285,20 @@ can directly do that using
 
 
 
-# 4 Datasets
+# 4 数据集
 
-For convenience we provide a number of datasets, including the video, lsd-slam's output and the generated point cloud as .ply. See
+为了方便起见，我们提供了许多数据集，包括视频、LSD-Slam的输出和生成的.ply格式的点云。详情请见
 [http://vision.in.tum.de/lsdslam](http://vision.in.tum.de/lsdslam)
 
 
-# 5 License
-LSD-SLAM is licensed under the GNU General Public License Version 3 (GPLv3), see http://www.gnu.org/licenses/gpl.html.
+# 5 许可
+LSD-SLAM根据GNU通用公共许可版本3（GPLv3）获得许可，请参阅http://www.gnu.org/licenses/gpl.html。
 
-For commercial purposes, we also offer a professional version under different licencing terms.
+出于商业目的，我们还提供不同许可条款下的专业版本。
 
 
 
-# 6 Troubleshoot / FAQ
+# 6 故障排除 / FAQ
 
 **How can I get the live-pointcloud in ROS to use with RVIZ?**
 
